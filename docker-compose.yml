@@ -6,6 +6,7 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
+      - POSTGRES_PORT
       - TZ
       - POSTGRES_HOST
       - EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY
