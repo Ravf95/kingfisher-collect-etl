@@ -163,3 +163,4 @@ if os.getenv('SCRAPY_PROJECT') is None:
     COMMANDS_MODULE = 'kingfisher_scrapy.commands'
 
 EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY = int(os.getenv('EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY', 6))
+RETRY_TIMES = 333
