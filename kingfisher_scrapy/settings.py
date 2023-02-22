@@ -88,7 +88,9 @@ ITEM_PIPELINES = {
 from sqlalchemy.dialects.postgresql import JSONB
 
 PG_PIPELINE = {
-     'connection': f'postgresql://{os.getenv("POSTGRES_USER", "empatia")}:{os.getenv("POSTGRES_PASSWORD", "empatia")}@{os.getenv("POSTGRES_HOST", "localhost")}/{os.getenv("POSTGRES_DB", "empatia")}',
+     'connection': f'postgresql://{os.getenv("POSTGRES_USER", "empatia")}:{os.getenv("POSTGRES_PASSWORD", "empatia")}'\
+                            f'@{os.getenv("POSTGRES_HOST", "localhost")}:{os.getenv("POSTGRES_PORT", "5432")}'\
+                            f'/{os.getenv("POSTGRES_DB", "empatia")}',
    # 'connection': f'postgresql://{os.getenv("POSTGRES_USER", "empatia")}:{os.getenv("POSTGRES_PASSWORD", "empatia")}@db/empatia',
     'table_name': 'data',
     'pkey': 'release_id',
