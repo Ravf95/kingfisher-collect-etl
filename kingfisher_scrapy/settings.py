@@ -162,4 +162,4 @@ if os.getenv('SCRAPY_PROJECT') is None:
     # https://docs.scrapy.org/en/latest/topics/commands.html#commands-module
     COMMANDS_MODULE = 'kingfisher_scrapy.commands'
 
-EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY = os.getenv('EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY', 6)
+EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY = int(os.getenv('EMPATIA_ETL_SCHEDULER_HOURS_PARAGUAY', 6))
