@@ -2,6 +2,7 @@ version: "3"
 services:
   etl:
     build: .
+    restart: always
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
