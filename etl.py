@@ -20,6 +20,7 @@ runner = CrawlerProcess(get_project_settings())
 
 def signal_handler(sig, frame):
     runner.stop()
+    logging.warning('SIGINT: scheduler finalizado')
     exit(0)
 
 
@@ -46,7 +47,7 @@ def crawl():
 
 
 def catch_error(failure):
-    print(failure.value)
+    logging.error(failure.value)
 
 
 if __name__ == '__main__':
