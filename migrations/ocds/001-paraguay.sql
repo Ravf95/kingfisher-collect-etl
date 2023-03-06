@@ -159,6 +159,62 @@ create table if not exists ocds.award_items
     data_id                    bigint
 );
 
+create table if not exists ocds.second_stage_invitations
+(
+    ocid                                  text,
+    invitations_id                        text,
+    id                                    bigserial not null,
+    title                                 text,
+    status                                text,
+    award_criteria                        text,
+    award_criteriadetails                 text,
+    submission_methoddetails              text,
+    status_details                        text,
+    numberofnotifiedsuppliers             numeric,
+    mainprocurementcategorydetails        text,
+    date_published                        timestamp,
+    amount                                numeric,
+    currency                              text,
+    submission_period_start_date          timestamp,
+    submission_period_end_date            timestamp,
+    award_period_start_date               timestamp,
+    award_period_end_date                 timestamp,
+    numberofenquiries                     numeric,
+    procurementmethod                     text,
+    procurementmethoddetails              text,
+    numberofsubmitters                    numeric,
+    framework_agreement                   boolean,
+    electronic_auction                    boolean,
+    buyer_id                              text,
+    buyer_name                            text,
+    bidopening_date                       timestamp,
+    clarification_meetings_date           timestamp,
+    characteristics                       text,
+    documents                             jsonb,
+    data_id                               bigint,
+    url                                   text,
+    constraint second_stage_invitations_pk PRIMARY KEY (id)
+);
+
+create table if not exists ocds.second_stage_invitations_items
+(
+    ocid                                 text,
+    invitations_id                       text,
+    id                                   bigserial not null,
+    item_id                              text,
+    description                          text,
+    classification_id                    text,
+    classification_description           text,
+    quantity                             numeric,
+    unit_name                            text,
+    unit_price                           numeric,
+    unit_price_currency                  text,
+    attributes                           jsonb,
+    lot                                  text,
+    data_id                              bigint,
+    constraint second_stage_invitations_items_pk PRIMARY KEY (id)
+);
+
 CREATE MATERIALIZED VIEW IF NOT EXISTS ocds.unique_suppliers AS
 (
 SELECT DISTINCT parties.name                                  AS name,
