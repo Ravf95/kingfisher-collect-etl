@@ -20,15 +20,15 @@ delete from ocds.parties where data_id in (
 select a.data_id from ocds.procurement a
 join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
 
-delete from ocds.procurement where data_id in (
-select a.data_id from ocds.procurement a
-join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
-
 delete from ocds.second_stage_invitations where data_id in (
 select a.data_id from ocds.procurement a
 join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
 
 delete from ocds.second_stage_invitations_items where data_id in (
+select a.data_id from ocds.procurement a
+join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
+
+delete from ocds.procurement where data_id in (
 select a.data_id from ocds.procurement a
 join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
 
