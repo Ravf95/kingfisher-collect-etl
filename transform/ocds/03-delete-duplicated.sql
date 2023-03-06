@@ -24,6 +24,14 @@ delete from ocds.procurement where data_id in (
 select a.data_id from ocds.procurement a
 join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
 
+delete from ocds.second_stage_invitations where data_id in (
+select a.data_id from ocds.procurement a
+join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
+
+delete from ocds.second_stage_invitations_items where data_id in (
+select a.data_id from ocds.procurement a
+join ocds.procurement b on a.ocid = b.ocid and a.id < b.id);
+
 refresh materialized view ocds.unique_suppliers;
 
 create table if not exists ocds.precios_pre_pandemia as (
