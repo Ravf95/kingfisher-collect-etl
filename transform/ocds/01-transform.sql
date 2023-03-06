@@ -167,3 +167,73 @@ insert into ocds.award_items (ocid, data_id, award_id, item_id, description, cla
     CROSS JOIN jsonb_array_elements(data -> 'awards') aa
     CROSS JOIN jsonb_array_elements(aa->'items') a
 );
+
+INSERT INTO ocds.second_stage_invitations (ocid, invitations_id, data_id, title, status, award_criteria, award_criteriadetails,
+                                submission_methoddetails, status_details, numberofnotifiedsuppliers, mainprocurementcategorydetails, date_published,
+                                amount, currency, submission_period_start_date, submission_period_end_date, award_period_start_date, award_period_end_date,
+                                numberofenquiries, procurementmethod, procurementmethoddetails, numberofsubmitters, framework_agreement,
+                                electronic_auction, buyer_id, buyer_name, bidopening_date, clarification_meetings_date, characteristics,
+                                documents, url) (
+    select distinct r.ocid as ocid,
+                    i->>'id' as invitations_id,
+                    r.id as data_id,
+                    i->>'title' as title,
+                    i->>'status' as status,
+                    i->>'awardCriteria' as award_criteria,
+                    i->>'awardCriteriaDetails' as award_criteriadetails,
+                    i->>'submissionMethodDetails' as submission_methoddetails,
+                    i->>'statusDetails' as status_details,
+                    COALESCE(jsonb_array_length(i->'notifiedSuppliers'), 0) as numberofnotifiedsuppliers,
+                    i->>'mainProcurementCategoryDetails' as mainprocurementcategorydetails,
+                    (i->>'datePublished')::timestamp as date_published,
+                    (i->'value'->>'amount')::numeric as amount,
+                    i->'value'->>'currency' as currency,
+                    (i->'submissionPeriod'->>'startDate')::timestamp as submission_period_start_date,
+                    (i->'submissionPeriod'->>'endDate')::timestamp as submission_period_end_date,
+                    (i->'awardPeriod'->>'startDate')::timestamp as award_period_start_date,
+                    (i->'awardPeriod'->>'endDate')::timestamp as award_period_end_date,
+                    COALESCE(jsonb_array_length(i->'enquiries'), 0) as numberofenquiries,
+                    i->>'procurementMethod' as procurementmethod,
+                    i->>'procurementMethodDetails' as procurementmethoddetails,
+                    COALESCE(jsonb_array_length(i->'submitters'), 0) as numberofsubmitters,
+                    case when i->'techniques'->'hasFrameworkAgreement' is not null
+                        then TRUE
+                        else FALSE
+                    end as framework_agreement,
+                    case when i->'techniques'->'hasElectronicAuction' is not null
+                        then TRUE
+                        else FALSE
+                    end as electronic_auction,
+                    i->'buyer'->>'id' as buyer_id,
+                    i->'buyer'->>'name' as buyer_name,
+                    (i->'bidOpening'->>'date')::timestamp as bidopening_date,
+                    (i->'clarificationMeetings'->>'date')::timestamp as clarification_meetings_date,
+                    i->>'coveredBy' as characteristics,
+                    i->'documents' as documents,
+                    case when i->>'procurementMethod' = 'direct'
+                        then 'https://contrataciones.gov.py/sin-difusion-convocatoria/'|| (i->>'id') || '.html'
+                        else 'https://contrataciones.gov.py/licitaciones/convocatoria/'|| (i->>'id') || '.html'
+                    end as url
+    from ocds.data as r
+    CROSS JOIN jsonb_array_elements(data->'secondStage'->'invitations') i
+);
+
+insert into ocds.second_stage_invitations_items (ocid, invitations_id, data_id, item_id, description, classification_id, classification_description,
+                                        quantity, unit_name, unit_price, unit_price_currency, attributes, lot) (
+        select distinct r.ocid as ocid,
+                        i->>'id' as invitations_id,
+                        r.id as data_id,
+                        ii->>'id' as item_id,
+                        ii->>'description' as description,
+                        ii->'classification'->>'id' as classification_id,
+                        ii->'classification'->>'description' as classification_description,
+                        (ii->>'quantity')::numeric as quantity,
+                        (ii->'unit'->>'name') as unit_name,
+                        (ii->'unit'->'value'->>'amount')::numeric as unit_price,
+                        ii->'unit'->'value'->>'currency' as unit_price_currency,
+                        ii->'attributes' as attributes,
+                        ii->>'relatedLot' as lot
+    from ocds.data as r
+    CROSS JOIN jsonb_array_elements(data->'secondStage'->'invitations') i
+    CROSS JOIN jsonb_array_elements(i->'items') ii
+);
