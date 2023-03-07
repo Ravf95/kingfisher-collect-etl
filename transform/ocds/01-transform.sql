@@ -4,7 +4,7 @@ INSERT INTO ocds.procurement (release_date, ocid, data_id, tender_id, characteri
                                   tender_bidopening_date, tender_awardcriteria_details, tender_status, tender_status_details,
                                   tender_title, tender_mainprocurementcategorydetails, tender_numberoftenderers, analyzed, number_of_awards,
                                   framework_agreement, electronic_auction, budget, documents, tender_numberofenquiries, url,
-                              tender_procurementmethod)   (
+                              tender_procurementmethod, second_stage)   (
     SELECT
     distinct
     (data->>'date')::timestamp as release_date,
@@ -43,7 +43,8 @@ INSERT INTO ocds.procurement (release_date, ocid, data_id, tender_id, characteri
          then 'https://contrataciones.gov.py/sin-difusion-convocatoria/'|| (data->'tender'->>'id') || '.html'
          else 'https://contrataciones.gov.py/licitaciones/convocatoria/'|| (data->'tender'->>'id') || '.html'
        end                                           as url,
-                        data->'tender'->>'procurementMethod' as procurement_method
+                        data->'tender'->>'procurementMethod' as procurement_method,
+                        case when data->'secondStage' is not null then TRUE else FALSE end as second_stage
            FROM (
     SELECT
         data.id as data_id,
