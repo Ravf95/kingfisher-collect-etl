@@ -233,3 +233,4 @@ WHERE NOT parties.roles ? 'buyer'::text
   AND parties.party_id ~~ 'PY-RUC-%'::text );
 
 alter table ocds.procurement add column if not exists tender_procurementmethod text;
+alter table ocds.procurement add column if not exists second_stage boolean;
